@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense &amp; Budget Visualizer</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+
+    <!-- Balance Display -->
+    <header class="balance-section">
+      <h1>Expense &amp; Budget Visualizer</h1>
+      <div class="balance-container">
+        <span class="balance-label">Total Spending:</span>
+        <span id="balance-display">0.00</span>
+      </div>
+    </header>
+
+    <main class="app-container">
+
+      <!-- Error Banner (shown when localStorage data is corrupt) -->
+      <div id="error-banner" class="error-banner" hidden aria-live="polite"></div>
+
+      <!-- Transaction Input Form -->
+      <section class="form-section" aria-labelledby="transaction-form-heading">
+        <h2 id="transaction-form-heading">Add Transaction</h2>
+        <form id="transaction-form" novalidate>
+          <div class="form-group">
+            <label for="expense-name">Item Name</label>
+            <input
+              type="text"
+              id="expense-name"
+              name="expense-name"
+              maxlength="100"
+              placeholder="e.g. Lunch"
+              autocomplete="off"
+            />
+            <span
+              id="expense-name-error"
+              class="error-message"
+              role="alert"
+              aria-live="polite"
+            ></span>
+          </div>
+
+          <div class="form-group">
+            <label for="expense-amount">Amount</label>
+            <input
+              type="number"
+              id="expense-amount"
+              name="expense-amount"
+              min="0.01"
+              step="0.01"
+              placeholder="0.00"
+            />
+            <span
+              id="expense-amount-error"
+              class="error-message"
+              role="alert"
+              aria-live="polite"
+            ></span>
+          </div>
+
+          <div class="form-group">
+            <label for="category-select">Category</label>
+            <select id="category-select" name="category-select">
+              <option value="" disabled selected>Select a category</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Fun">Fun</option>
+            </select>
+            <span
+              id="category-select-error"
+              class="error-message"
+              role="alert"
+              aria-live="polite"
+            ></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Add Transaction</button>
+        </form>
+      </section>
+
+      <!-- Add Category Form -->
+      <section class="form-section" aria-labelledby="add-category-heading">
+        <h2 id="add-category-heading">Add Category</h2>
+        <form id="add-category-form" novalidate>
+          <div class="form-group">
+            <label for="new-category">Category Name</label>
+            <input
+              type="text"
+              id="new-category"
+              name="new-category"
+              maxlength="50"
+              placeholder="e.g. Healthcare"
+              autocomplete="off"
+            />
+            <span
+              id="new-category-error"
+              class="error-message"
+              role="alert"
+              aria-live="polite"
+            ></span>
+          </div>
+          <button type="submit" class="btn btn-secondary">Add Category</button>
+        </form>
+      </section>
+
+      <!-- Spending Limit Form -->
+      <section class="form-section" aria-labelledby="limit-form-heading">
+        <h2 id="limit-form-heading">Set Spending Limit</h2>
+        <form id="limit-form" novalidate>
+          <div class="form-group">
+            <label for="limit-category-select">Category</label>
+            <select id="limit-category-select" name="limit-category-select">
+              <option value="" disabled selected>Select a category</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Fun">Fun</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="limit-value">Limit Amount</label>
+            <input
+              type="number"
+              id="limit-value"
+              name="limit-value"
+              min="0.01"
+              max="999999999.99"
+              step="0.01"
+              placeholder="0.00"
+            />
+            <span
+              id="limit-value-error"
+              class="error-message"
+              role="alert"
+              aria-live="polite"
+            ></span>
+          </div>
+
+          <button type="submit" class="btn btn-secondary">Set Limit</button>
+        </form>
+      </section>
+
+      <!-- Transaction List -->
+      <section class="list-section" aria-labelledby="transaction-list-heading">
+        <div class="list-header">
+          <h2 id="transaction-list-heading">Transactions</h2>
+
+          <!-- Sort Control -->
+          <div class="sort-control">
+            <label for="sort-select">Sort by:</label>
+            <select id="sort-select" name="sort-select">
+              <option value="insertion">Insertion Order</option>
+              <option value="amount-asc">Amount: Low to High</option>
+              <option value="amount-desc">Amount: High to Low</option>
+              <option value="category-az">Category: A–Z</option>
+            </select>
+          </div>
+        </div>
+
+        <ul id="transaction-list" aria-label="Transaction list">
+          <p id="empty-state" class="empty-state">No transactions yet</p>
+        </ul>
+      </section>
+
+      <!-- Pie Chart Section -->
+      <section class="chart-section" aria-labelledby="chart-heading">
+        <h2 id="chart-heading">Spending by Category</h2>
+        <div class="chart-container">
+          <canvas id="expense-chart" aria-label="Pie chart of spending by category" role="img"></canvas>
+          <p id="chart-placeholder" class="chart-placeholder">No data to display</p>
+        </div>
+      </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js" defer></script>
+  </body>
+</html>
